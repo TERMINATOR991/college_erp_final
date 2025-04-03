@@ -26,24 +26,9 @@ const Login = ({ onLogin, onShowRegister }) => {
     setIsLoading(true);
     
     try {
-      // For now, use the hardcoded credentials
-      // In a real app, you would use the loginUser function
-      if (username === 'admin' && password === 'password123') {
-        onLogin(true);
-        setError('');
-      } else if (username === 'tester' && password === 'password123') {
-        onLogin(true);
-        setError('');
-      } else {
-        setError('Invalid credentials');
-      }
-      
-      // Uncomment this when the backend is ready
-      /*
       const response = await loginUser({ username, password });
       onLogin(true);
       setError('');
-      */
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');
     } finally {
@@ -101,35 +86,30 @@ const App = () => {
   const [showRegister, setShowRegister] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [students, setStudents] = useState([]);
-  const [user, setUser] = useState(null);
 
-  // Check if user is already authenticated on mount
+  // Check if user is already authenticated on component mount
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const savedAuth = localStorage.getItem('isAuthenticated');
-        if (savedAuth === 'true') {
-          setIsAuthenticated(true);
-          // Load saved students from localStorage
-          const savedStudents = localStorage.getItem('students');
-          if (savedStudents) {
-            setStudents(JSON.parse(savedStudents));
-          }
-        }
-      } catch (error) {
-        console.error('Error checking authentication:', error);
-      }
-    };
-    checkAuth();
+    const authStatus = localStorage.getItem('isAuthenticated') === 'true';
+    setIsAuthenticated(authStatus);
+    
+    // If authenticated, fetch students from API
+    if (authStatus) {
+      fetchStudents();
+    }
   }, []);
 
-  // Save students to localStorage whenever they change
-  useEffect(() => {
-    if (students.length > 0) {
-      localStorage.setItem('students', JSON.stringify(students));
+  const fetchStudents = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getAllStudents();
+      setStudents(data);
+    } catch (err) {
+      setError('Failed to fetch students: ' + err.message);
+      console.error('Error fetching students:', err);
+    } finally {
+      setIsLoading(false);
     }
-  }, [students]);
+  };
 
   const handleLogin = (status) => {
     setIsAuthenticated(status);
@@ -138,9 +118,8 @@ const App = () => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setStudents([]);
     localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('students');
+    logoutUser();
   };
 
   const handleRegisterSuccess = () => {
@@ -192,6 +171,7 @@ const App = () => {
     }))
   });
 
+  const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [activeSubject, setActiveSubject] = useState({
     assignments: theorySubjects[0].id,
@@ -227,39 +207,78 @@ const App = () => {
     }
   };
 
-  const addStudent = () => {
-    const newStudent = {
-      id: Date.now(), // Use timestamp as a unique ID
-      rollNo: inputs.rollNo,
-      name: inputs.name,
-      theoryAttendance: inputs.theoryAttendance.map(subject => ({
-        subjectId: subject.subjectId,
-        subjectName: subject.subjectName,
-        attendance: parseInt(subject.attendance) || 0
-      })),
-      labAttendance: inputs.labAttendance.map(lab => ({
-        labId: lab.labId,
-        labName: lab.labName,
-        attendance: parseInt(lab.attendance) || 0
-      })),
-      ia1: parseInt(inputs.ia1) || 0,
-      ia2: parseInt(inputs.ia2) || 0,
-      ese: parseInt(inputs.ese) || 0,
-      assignments: inputs.assignments.map(subject => ({
-        subjectId: subject.subjectId,
-        subjectName: subject.subjectName,
-        marks: subject.marks.map(mark => parseInt(mark) || 0)
-      })),
-      practicals: inputs.practicals.map(lab => ({
-        labId: lab.labId,
-        labName: lab.labName,
-        grades: lab.grades.map(grade => grade || 'N/A')
-      })),
-      createdAt: new Date().toISOString()
-    };
-    
-    setStudents([...students, newStudent]);
-    resetForm();
+  const addStudent = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      
+      // Format data for API
+      const studentData = {
+        roll_no: inputs.rollNo,
+        name: inputs.name,
+        email: '', // Optional
+        theory_attendance: inputs.theoryAttendance.reduce((acc, subject) => {
+          acc[subject.subjectId] = parseInt(subject.attendance) || 0;
+          return acc;
+        }, {}),
+        lab_attendance: inputs.labAttendance.reduce((acc, lab) => {
+          acc[lab.labId] = parseInt(lab.attendance) || 0;
+          return acc;
+        }, {}),
+        ia1: parseInt(inputs.ia1) || 0,
+        ia2: parseInt(inputs.ia2) || 0,
+        ese: parseInt(inputs.ese) || 0,
+        assignments: inputs.assignments.reduce((acc, subject) => {
+          acc[subject.subjectId] = subject.marks.map(mark => parseInt(mark) || 0);
+          return acc;
+        }, {}),
+        practicals: inputs.practicals.reduce((acc, lab) => {
+          acc[lab.labId] = lab.grades.map(grade => grade || 'N/A');
+          return acc;
+        }, {})
+      };
+      
+      // Save to API
+      const savedStudent = await studentApiCreateStudent(studentData);
+      
+      // Format for local state
+      const newStudent = {
+        id: savedStudent.id,
+        rollNo: savedStudent.roll_no,
+        name: savedStudent.name,
+        theoryAttendance: Object.entries(savedStudent.theory_attendance).map(([id, attendance]) => ({
+          subjectId: parseInt(id),
+          subjectName: theorySubjects.find(s => s.id === parseInt(id))?.name || `Subject ${id}`,
+          attendance
+        })),
+        labAttendance: Object.entries(savedStudent.lab_attendance).map(([id, attendance]) => ({
+          labId: parseInt(id),
+          labName: labSubjects.find(l => l.id === parseInt(id))?.name || `Lab ${id}`,
+          attendance
+        })),
+        ia1: savedStudent.ia1,
+        ia2: savedStudent.ia2,
+        ese: savedStudent.ese,
+        assignments: Object.entries(savedStudent.assignments).map(([id, marks]) => ({
+          subjectId: parseInt(id),
+          subjectName: theorySubjects.find(s => s.id === parseInt(id))?.name || `Subject ${id}`,
+          marks
+        })),
+        practicals: Object.entries(savedStudent.practicals).map(([id, grades]) => ({
+          labId: parseInt(id),
+          labName: labSubjects.find(l => l.id === parseInt(id))?.name || `Lab ${id}`,
+          grades
+        }))
+      };
+      
+      setStudents([...students, newStudent]);
+      resetForm();
+    } catch (err) {
+      setError('Failed to save student: ' + err.message);
+      console.error('Error saving student:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const resetForm = () => {
