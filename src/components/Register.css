@@ -1,0 +1,80 @@
+.register-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.register-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #555;
+}
+
+.input-group input,
+.input-group select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+.register-btn {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.register-btn:hover {
+  background-color: #3a7bc8;
+}
+
+.register-btn:disabled {
+  background-color: #a0c3e8;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.success-message {
+  color: #2ecc71;
+  font-size: 14px;
+  margin-top: 5px;
+} 

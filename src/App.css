@@ -1,0 +1,441 @@
+/* Base Styles */
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --accent-color: #e74c3c;
+  --light-gray: #ecf0f1;
+  --medium-gray: #bdc3c7;
+  --dark-gray: #7f8c8d;
+  --white: #ffffff;
+  --black: #2c3e50;
+  --highlight-color: #f1c40f;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--black);
+  background-color: #f5f7fa;
+  height: 100vh;
+}
+
+/* Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.input-column,
+.output-column {
+  flex: 1;
+  padding: 20px;
+  background-color: var(--light-gray);
+  overflow-y: auto;
+  min-height: 100%; /* Ensure columns take full height */
+}
+
+.output-column {
+  background-color: var(--white);
+  border-left: 1px solid var(--medium-gray);
+}
+
+/* Input Section Styles */
+.input-section {
+  margin-bottom: 25px;
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.input-section h3 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: var(--dark-gray);
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--medium-gray);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Output Section Styles */
+.student-selector {
+  margin-bottom: 20px;
+}
+
+.student-selector select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--medium-gray);
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.report-container {
+  margin-top: 20px;
+}
+
+.student-report {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.report-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.report-header h2 {
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.student-info {
+  margin-bottom: 20px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.info-item span:first-child {
+  font-weight: 500;
+  color: var(--dark-gray);
+}
+
+.report-section {
+  margin: 25px 0;
+}
+
+.report-section h3 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--light-gray);
+}
+
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.data-item {
+  background-color: var(--light-gray);
+  padding: 15px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.data-item.highlight {
+  background-color: var(--highlight-color);
+}
+
+.data-item span {
+  display: block;
+}
+
+.data-item span:first-child {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--dark-gray);
+  margin-bottom: 5px;
+}
+
+.grade {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.report-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--light-gray);
+}
+
+.signature {
+  width: 200px;
+}
+
+.signature-line {
+  height: 1px;
+  background-color: var(--black);
+  margin-bottom: 5px;
+}
+
+.pdf-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.pdf-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+  
+  .input-column,
+  .output-column {
+    flex: none;
+    height: 50vh;
+  }
+  
+  .output-column {
+    border-left: none;
+    border-top: 1px solid var(--medium-gray);
+  }
+  
+  .input-row,
+  .data-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+/* Subject Selector Styles */
+.subject-selector {
+  margin-bottom: 15px;
+}
+
+.subject-selector label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: var(--dark-gray);
+}
+
+.subject-selector select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--medium-gray);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.subject-assignments,
+.subject-practicals {
+  margin-bottom: 20px;
+}
+
+.subject-assignments h4,
+.subject-practicals h4 {
+  color: var(--dark-gray);
+  margin: 10px 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Login Styles */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--light-gray);
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-btn {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  background-color: #3a7bc8;
+}
+
+.login-btn:disabled {
+  background-color: #a0c3e8;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: var(--accent-color);
+  margin: 10px 0;
+  text-align: center;
+}
+
+.logout-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  padding: 8px 16px;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Class Selection Dropdown Styles */
+.class-selector {
+  margin-bottom: 15px;
+}
+
+.class-selector label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: var(--dark-gray);
+}
+
+.class-selector select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--medium-gray);
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.class-selector select:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+/* Registration link styles */
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  color: #3a7bc8;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-info span {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
